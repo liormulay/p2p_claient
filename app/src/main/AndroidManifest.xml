@@ -20,9 +20,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.BLEP2P">
         <activity android:name=".views.activities.DeviceConnectActivity" />
-        <activity android:name=".views.activities.CentralRoleActivity" />
-        <activity android:name=".views.activities.PeripheralRoleActivity" />
-        <activity android:name=".views.activities.MainActivity">
+        <activity android:name=".views.activities.CentralRoleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +32,6 @@
             android:name=".services.CentralService"
             android:enabled="true" />
 
-        <service
-            android:name=".services.PeripheralAdvertiseService"
-            android:enabled="true" />
     </application>
 
 </manifest>

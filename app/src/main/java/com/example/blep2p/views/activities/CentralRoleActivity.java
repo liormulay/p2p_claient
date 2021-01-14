@@ -64,6 +64,9 @@ public class CentralRoleActivity extends BluetoothActivity implements View.OnCli
         viewModel = new CentralRoleViewModel();
 
         mScanButton = findViewById(R.id.button_scan);
+        if (enableNavigation) {
+            mScanButton.setEnabled(true);
+        }
         mScanButton.setOnClickListener(this);
 
         mDevicesRecycler = findViewById(R.id.devices_recycler_view);
@@ -82,10 +85,10 @@ public class CentralRoleActivity extends BluetoothActivity implements View.OnCli
 
     private void subscribe() {
         compositeDisposable.add(viewModel.getDevices()
-        .subscribe(deviceModel -> mDevicesAdapter.add(deviceModel)));
+                .subscribe(deviceModel -> mDevicesAdapter.add(deviceModel)));
 
         compositeDisposable.add(viewModel.getErrorMessages()
-        .subscribe(this::showMsgText));
+                .subscribe(this::showMsgText));
     }
 
 
@@ -127,7 +130,7 @@ public class CentralRoleActivity extends BluetoothActivity implements View.OnCli
             if (bluetoothLeScanner != null) {
 
                 if (mScanCallback == null) {
-                    Log.d(MainActivity.TAG, "Starting Scanning");
+                    Log.d(TAG, "Starting Scanning");
 
                     // Will stop the scanning after a set time.
                     mHandler.postDelayed(this::stopScanning, SCAN_PERIOD);
@@ -182,7 +185,7 @@ public class CentralRoleActivity extends BluetoothActivity implements View.OnCli
      */
     public void stopScanning() {
 
-        Log.d(MainActivity.TAG, "Stopping Scanning");
+        Log.d(TAG, "Stopping Scanning");
 
         /*
         better to request each time as BluetoothAdapter state might change (connection lost, etc...)

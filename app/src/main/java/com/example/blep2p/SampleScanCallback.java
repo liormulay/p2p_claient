@@ -6,9 +6,10 @@ import android.bluetooth.le.ScanResult;
 import android.util.Log;
 
 import com.example.blep2p.viewmodels.CentralRoleViewModel;
-import com.example.blep2p.views.activities.MainActivity;
 
 import java.util.List;
+
+import static com.example.blep2p.views.activities.BluetoothActivity.TAG;
 
 /**
  * Custom ScanCallback object - adds to adapter on success, displays error on failure.
@@ -55,10 +56,10 @@ public class SampleScanCallback extends ScanCallback {
         if (result != null) {
             BluetoothDevice device = result.getDevice();
             if (device != null) {
-                Log.v(MainActivity.TAG, device.getName() + " " + device.getAddress());
+                Log.v(TAG, device.getName() + " " + device.getAddress());
                 return;
             }
         }
-        Log.e(MainActivity.TAG, "error SampleScanCallback");
+        Log.e(TAG, "error SampleScanCallback");
     }
 }

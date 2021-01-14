@@ -152,7 +152,7 @@ public class DeviceConnectActivity extends BluetoothActivity implements View.OnC
             mBluetoothLeService = ((CentralService.LocalBinder) service).getService();
 
             if (!mBluetoothLeService.initialize()) {
-                Log.e(MainActivity.TAG, "Unable to initialize Bluetooth");
+                Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             }
 
@@ -210,7 +210,7 @@ public class DeviceConnectActivity extends BluetoothActivity implements View.OnC
 
                 case CentralService.ACTION_DATA_AVAILABLE:
                     String msg = intent.getStringExtra(CentralService.EXTRA_DATA);
-                    Log.v(MainActivity.TAG, "ACTION_DATA_AVAILABLE " + msg);
+                    Log.v(TAG, "ACTION_DATA_AVAILABLE " + msg);
                     updateInputFromServer(msg);
                     break;
 

@@ -15,14 +15,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.example.blep2p.views.activities.MainActivity;
-
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 import static com.example.blep2p.Constants.BODY_SENSOR_LOCATION_CHARACTERISTIC_UUID;
+import static com.example.blep2p.views.activities.BluetoothActivity.TAG;
 
 public class CentralService extends Service {
 
@@ -72,14 +71,14 @@ public class CentralService extends Service {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
-                Log.i(MainActivity.TAG, "Connected to GATT server.");
+                Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
-                Log.i(MainActivity.TAG, "Attempting to start service discovery:" + mBluetoothGatt.discoverServices());
+                Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt.discoverServices());
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
-                Log.i(MainActivity.TAG, "Disconnected from GATT server.");
+                Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
             }
 
@@ -91,7 +90,7 @@ public class CentralService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
-                Log.w(MainActivity.TAG, "onServicesDiscovered received: " + status);
+                Log.w(TAG, "onServicesDiscovered received: " + status);
             }
         }
 
@@ -100,7 +99,7 @@ public class CentralService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             } else {
-                Log.w(MainActivity.TAG, "onCharacteristicRead GATT_FAILURE");
+                Log.w(TAG, "onCharacteristicRead GATT_FAILURE");
             }
         }
 
@@ -129,7 +128,7 @@ public class CentralService extends Service {
         if (BODY_SENSOR_LOCATION_CHARACTERISTIC_UUID.equals(characteristic.getUuid())) {
 
             String msg = characteristic.getStringValue(0);
-            Log.d(MainActivity.TAG, "message: " + msg);
+            Log.d(TAG, "message: " + msg);
             intent.putExtra(EXTRA_DATA, msg);
 
         } else {
@@ -146,7 +145,7 @@ public class CentralService extends Service {
                     stringBuilder.append(String.format("%02X ", byteChar));
                 }
 
-                Log.w(MainActivity.TAG, "broadcastUpdate. general profile");
+                Log.w(TAG, "broadcastUpdate. general profile");
                 intent.putExtra(EXTRA_DATA, "");
             }
         }
@@ -189,7 +188,7 @@ public class CentralService extends Service {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
             if (mBluetoothManager == null) {
-                Log.e(MainActivity.TAG, "Unable to initialize BluetoothManager.");
+                Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
             }
         }
@@ -197,7 +196,7 @@ public class CentralService extends Service {
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 
         if (mBluetoothAdapter == null) {
-            Log.e(MainActivity.TAG, "Unable to obtain a BluetoothAdapter.");
+            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
 
@@ -216,13 +215,13 @@ public class CentralService extends Service {
     public boolean connect(final String address) {
 
         if (mBluetoothAdapter == null || address == null) {
-            Log.w(MainActivity.TAG, "BluetoothAdapter not initialized or unspecified address.");
+            Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
 
         // Previously connected device.  Try to reconnect.
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
-            Log.d(MainActivity.TAG, "Trying to use an existing mBluetoothGatt for connection.");
+            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
@@ -233,7 +232,7 @@ public class CentralService extends Service {
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            Log.w(MainActivity.TAG, "Device not found.  Unable to connect.");
+            Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
         }
 
@@ -244,7 +243,7 @@ public class CentralService extends Service {
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
 
-        Log.d(MainActivity.TAG, "Trying to create a new connection.");
+        Log.d(TAG, "Trying to create a new connection.");
 
         return true;
     }
@@ -261,7 +260,7 @@ public class CentralService extends Service {
     public void disconnect() {
 
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(MainActivity.TAG, "BluetoothAdapter not initialized");
+            Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
 
@@ -293,7 +292,7 @@ public class CentralService extends Service {
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
 
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(MainActivity.TAG, "BluetoothAdapter not initialized");
+            Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
 
@@ -309,7 +308,7 @@ public class CentralService extends Service {
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
 
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(MainActivity.TAG, "BluetoothAdapter not initialized");
+            Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
 
