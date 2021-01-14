@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -85,9 +86,11 @@ public class CentralRoleActivity extends BluetoothActivity implements View.OnCli
 
     private void subscribe() {
         compositeDisposable.add(viewModel.getDevices()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(deviceModel -> mDevicesAdapter.add(deviceModel)));
 
         compositeDisposable.add(viewModel.getErrorMessages()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showMsgText));
     }
 

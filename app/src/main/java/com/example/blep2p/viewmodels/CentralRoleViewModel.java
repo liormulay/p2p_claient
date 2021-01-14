@@ -11,6 +11,8 @@ import com.google.common.base.Strings;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 public class CentralRoleViewModel extends ViewModel {
@@ -35,7 +37,9 @@ public class CentralRoleViewModel extends ViewModel {
     public Observable<DeviceModel> getDevices() {
         return resultsSubject
                 .filter(scanResult -> isFieldsValid(scanResult.getDevice()))
-                .map(results -> new DeviceModel(results.getDevice().getName(), results.getDevice().getAddress(), results.getRssi()));
+                .map(ScanResult::getDevice)
+                .map(device -> new DeviceModel(device.getName(), device.getAddress()))
+                .subscribeOn(Schedulers.io());
     }
 
     private boolean isFieldsValid(BluetoothDevice device) {
